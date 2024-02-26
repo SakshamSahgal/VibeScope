@@ -1,7 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { AxiosGET } from "../../Scripts/AxiosRequest";
+import axios from 'axios';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSync } from "@fortawesome/free-solid-svg-icons";
 
@@ -9,6 +8,7 @@ import ViewActivity from "./ViewActivity";
 import PermissionsSwitch from "../ModalComponents/PermissionsSwitch"
 import DateTimeActivity from "./DateTimeActivity";
 import DownloadTargetButton from "./DownloadTarget";
+import { toast } from 'react-toastify';
 
 function TargetCards() {
 
@@ -16,8 +16,13 @@ function TargetCards() {
 
     const fetchTargets = async () => {
 
-        const response = await AxiosGET("/getTargets",{}, Cookies.get('token'))
-        setTargets(response.targets)
+        try {
+            const response = await axios.get("/getTargets", { withCredentials: true })
+            setTargets(response.targets)
+        }
+        catch (error) {
+            toast.error(`Error fetching Targets : ${error}`)
+        }
 
     }
 
@@ -56,7 +61,7 @@ function TargetCards() {
                                 <div className="card-footer">
                                     <div className="container">
                                         <div className="row my-3">
-                                            <DownloadTargetButton targetName={target.Name}/>
+                                            <DownloadTargetButton targetName={target.Name} />
                                         </div>
                                         <div className="row">
                                             <ViewActivity Name={target.Name} />

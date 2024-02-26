@@ -1,15 +1,17 @@
 
 
-import Cookies from "js-cookie";
 import DownloadAllButton from "../Components/DownloadAllButton"
 import Navbar from "../Components/Navbar";
 import SizeBar from "../Components/Size";
 import TargetCards from "../Components/TargetCardComponents/TargetCards";
-import { AxiosGET } from "../Scripts/AxiosRequest";
+
 
 function Home() {
 
-    AxiosGET('/validateToken',{},Cookies.get('token'))
+    if(localStorage.getItem("LoggedIn") === null) {
+        window.location.href = '/';
+    }
+
 
     return (
         <>

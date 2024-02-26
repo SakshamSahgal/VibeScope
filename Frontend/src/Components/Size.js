@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from "react";
 import Badge from 'react-bootstrap/Badge';
-import Cookies from 'js-cookie';
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
-import { AxiosGET } from "../Scripts/AxiosRequest";
-
+import { toast } from "react-toastify";
+import axios from "axios";
 
 
 function SizeBar() {
     const [size, setSize] = useState([]);
 
     const fetchData = async () => {
-        const response = await AxiosGET("/getUploadsSizeOnDisk", {}, Cookies.get('token'))
-        setSize(response)
+        try {
+            const response = await axios.get("/getUploadsSizeOnDisk",{withCredentials: true});
+            setSize(response.data)
+            if(!response.data.success){
+                toast.error(`Error while fetching sizeBar Data : ${response.data.message}`);
+            }
+        }
+        catch (error) {
+            toast.error(`Error while fetching sizeBar Data : ${error.message}`);
+        }
+        
     };
 
     useEffect(() => {

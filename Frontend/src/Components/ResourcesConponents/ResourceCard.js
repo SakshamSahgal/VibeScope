@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap"
-import { AxiosPUT } from "../../Scripts/AxiosRequest";
 import { useState } from "react";
-import Cookies from "js-cookie";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function ResourceCard({ Heading, APIPath }) {
 
@@ -9,8 +9,13 @@ function ResourceCard({ Heading, APIPath }) {
 
     const SendDataToServer = async () => {
         console.log(data);
-        const response = await AxiosPUT(APIPath, { data: data }, Cookies.get('token'));
-        console.log(response);
+        try{
+            const response = await axios.put(APIPath, { data: data }, { withCredentials: true });
+            console.log(response);
+        }
+        catch(error){
+            toast.error(`Error sending data to server : ${error}`);
+        }
     }
 
     console.log(data);

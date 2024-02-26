@@ -1,14 +1,19 @@
-import { AxiosDELETE } from '../../Scripts/AxiosRequest';
-import Cookies from 'js-cookie';
+import axios from 'axios';
+
 
 function DeleteList({ targetName, deleteList, setDeleteList, viewActivity, setSliderValue }) {
 
     const onDeleteAll = async () => {
-        const response = await AxiosDELETE('/deleteImage/' + targetName, deleteList, Cookies.get('token'));
-        console.log(response);
-        viewActivity()
-        setSliderValue(0)
-        setDeleteList([])
+        try {
+            const response = await axios.delete('/deleteImage/' + targetName, { data: deleteList }, { withCredentials: true });
+            console.log(response);
+            viewActivity()
+            setSliderValue(0)
+            setDeleteList([])
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 
     return (

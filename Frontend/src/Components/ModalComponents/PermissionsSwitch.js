@@ -1,13 +1,18 @@
-import { useState } from "react";
 import { Form } from 'react-bootstrap';
-import { AxiosPUT } from "../../Scripts/AxiosRequest";
-import Cookies from "js-cookie";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function PermissionsSwitch({ permissions, Name, fetchTargets }) {
   const togglePermissions = async () => {
-    const response = await AxiosPUT('/updatePermissions/' + Name + "/" + !(permissions === "true"), {}, Cookies.get('token'))
-    console.log(response)
-    fetchTargets()
+    try {
+      const response = await axios.put('/updatePermissions/' + Name + "/" + !(permissions === "true"), {}, { withCredentials: true });
+      console.log(response)
+      fetchTargets()
+    }
+    catch (error) {
+      toast.error(`Error updating permissions : ${error}`);
+    }
+
   };
 
   return (

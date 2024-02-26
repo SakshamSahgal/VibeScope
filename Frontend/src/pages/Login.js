@@ -1,68 +1,75 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { Form, Button, Card } from 'react-bootstrap';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 
 
-const Login = () => {
+function Login() {
 
-    //check if token is present in cookies, if yes then redirect to home page
-    if (Cookies.get('token'))
+    if (localStorage.getItem("LoggedIn")) {
         window.location.href = '/home';
+    }
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    console.log(axios.defaults.baseURL);
-    const handleLogin = () => {
+    const [Username, setUsername] = useState('');
+    const [Password, setPassword] = useState('');
 
-        // console.log(`Username: ${username}, Password: ${password}`);
-    
-        axios.post( '/login', { username: username, password: password }).then((response) => {
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        console.log('Username:', Username);
+        console.log('Password:', Password);
+        try {
+            const response = await axios.post('/login', { Username, Password }, { withCredentials: true });
             console.log(response.data);
-            if (response.data.success == false) {
-                alert(response.data.message);
-                //remove token from cookies (if any)
-                Cookies.remove('token');
-            }
-            else {
-                //set token in cookies using js-cookie
-                Cookies.set('token', response.data.token);
+            if (response.data.success) {
+                toast.success('Login Successful');
+                localStorage.setItem("LoggedIn", true);
                 window.location.href = '/home';
             }
-        }).catch((err) => {
-            console.log(err);
-        });
-    };
-
-    //handle enter key press
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter') {
-            handleLogin();
+            else {
+                toast.error('Login Failed');
+            }
+        }
+        catch (error) {
+            console.error('Error:', error);
+            toast.error(`Error: ${error.message}`);
         }
     };
 
     return (
-        <div className="d-flex align-items-center justify-content-center vh-100">
-            <div className="card col-md-6 col-lg-4 shadow mb-5 rounded">
-                <div className="card-header text-center">
-                    <h3>Access Credentials</h3>
-                </div>
-                <div className="card-body">
-                    <div className="mb-3">
-                        <label htmlFor="username" className="form-label"> <FontAwesomeIcon icon={faUser} className="me-2" /> Username </label>
-                        <input type="text" className="form-control" id="username" value={username} onChange={(e) => setUsername(e.target.value)} onKeyPress={handleKeyPress} />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="password" className="form-label"> <FontAwesomeIcon icon={faLock} className="me-2" /> Password </label>
-                        <input type="password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyPress={handleKeyPress} />
-                    </div>
-                </div>
-                <div className="card-footer">
-                    <button type="button" className="btn btn-primary w-100" onClick={handleLogin}> <FontAwesomeIcon icon={faRightToBracket} className='me-2' /> Login </button>
-                </div>
-            </div>
+        <div className="container d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+            <Card style={{ width: '400px' }}>
+                <Card.Body>
+                    <h2 className="text-center">Credentials</h2>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group controlId="formBasicUsername" className="mb-3">
+                            <Form.Label><FontAwesomeIcon icon={faUser} /> Username</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter Username"
+                                value={Username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicPassword" className="mb-3">
+                            <Form.Label><FontAwesomeIcon icon={faLock} /> Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                placeholder="Password"
+                                value={Password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Button variant="primary" type="submit" className='w-100'>  Submit </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
         </div>
     );
 };

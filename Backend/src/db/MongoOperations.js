@@ -25,15 +25,13 @@ async function writeDB(Database, Collection, Data) { //Create Entry
     try {
         const db = client.db(Database);
         const collection = db.collection(Collection);
-        
+
         const result = await collection.insertOne(Data);
-        
+
         return result;
     } catch (error) {
         console.error("Error:", error);
         throw error; // Rethrow the error for the caller to handle
-    } finally {
-        await client.close();
     }
 }
 
@@ -70,7 +68,7 @@ async function updateDB(Database, Collection, FindQuery, UpdateQuery) { //Update
         const db = client.db(Database);
         const collection = db.collection(Collection);
 
-        const result = await collection.updateOne(FindQuery,UpdateQuery);
+        const result = await collection.updateOne(FindQuery, UpdateQuery);
 
         return result;
     } catch (error) {
@@ -122,4 +120,4 @@ async function SkipRead(Database, Collection, Query, sortQuery, Skip, Limit) { /
     }
 }
 
-module.exports = {connectDB, writeDB, readDB, updateDB, deleteDB, countDocuments, SkipRead , readwithSortDB};
+module.exports = { connectDB, writeDB, readDB, updateDB, deleteDB, countDocuments, SkipRead, readwithSortDB };
