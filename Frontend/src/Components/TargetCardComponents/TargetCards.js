@@ -18,7 +18,11 @@ function TargetCards() {
 
         try {
             const response = await axios.get("/getTargets", { withCredentials: true })
-            setTargets(response.targets)
+            if (response.data.success === false) {
+                toast.error(response.data.message)
+            }
+            else
+                setTargets(response.data.targets)
         }
         catch (error) {
             toast.error(`Error fetching Targets : ${error}`)

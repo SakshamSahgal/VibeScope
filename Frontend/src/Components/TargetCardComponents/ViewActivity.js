@@ -13,10 +13,10 @@ function ViewActivity({ Name }) {
     const viewActivity = async () => {
         console.log("fetching activity data for " + Name)
         try {
-            let data = await axios.get('/getActivity/' + Name, { withCredentials: true })
-            console.log(data)
-            setActivityArray(data.files)
-            setSizeInBytes(data.sizeInBytes)
+            let response = await axios.get('/getActivity/' + Name, { withCredentials: true })
+            console.log(response.data)
+            setActivityArray(response.data.files)
+            setSizeInBytes(response.data.sizeInBytes)
             setModalVisibility(!isModalVisible)
         }
         catch (error) {

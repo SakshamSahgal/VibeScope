@@ -6,7 +6,9 @@ function PermissionsSwitch({ permissions, Name, fetchTargets }) {
   const togglePermissions = async () => {
     try {
       const response = await axios.put('/updatePermissions/' + Name + "/" + !(permissions === "true"), {}, { withCredentials: true });
-      console.log(response)
+      console.log(response.data)
+      if (response.data.success === false)
+        toast.error(response.data.message)
       fetchTargets()
     }
     catch (error) {

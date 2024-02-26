@@ -8,6 +8,7 @@ const { connectDB } = require("./db/MongoOperations.js")
 const { Login, logoutRoute } = require("./Auth/jwt.js")
 const { getUploadsSizeOnDiskRoute } = require("../getSizeOnDisk.js")
 const { hasAccess } = require("./Auth/Middlewares")
+const { getTargetActivityRoute, DeleteImageRoute, getTargetsRoute, updatePermissionsRoute } = require("../serveAdmin.js")
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
@@ -20,10 +21,10 @@ app.listen(port, () => {
 app.post("/login", Login);
 app.get("/getUploadsSizeOnDisk", hasAccess, getUploadsSizeOnDiskRoute);
 app.get("/logout", hasAccess, logoutRoute);
-
-
-
-
+app.get("/getTargets", hasAccess, getTargetsRoute);
+app.put("/updatePermissions/:targetName/:newPermision", hasAccess, updatePermissionsRoute);
+app.get("/getActivity/:TargetName", hasAccess, getTargetActivityRoute);
+app.delete("/deleteImage/:targetName", hasAccess, DeleteImageRoute);
 
 
 
