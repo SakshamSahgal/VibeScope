@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const app = express();
 const path = require('path');
@@ -11,7 +12,7 @@ app.use(
     })
 );
 app.use(express.json());
-
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.static(path.join(__dirname, 'uploads')));
 app.use(bodyParser.urlencoded({ extended: true }));

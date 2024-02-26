@@ -5,7 +5,9 @@ const fs = require("fs")
 const { app } = require("./app");
 const { connectDB } = require("./db/MongoOperations.js")
 
-const { Login } = require("./Auth/jwt.js")
+const { Login, logoutRoute } = require("./Auth/jwt.js")
+const { getUploadsSizeOnDiskRoute } = require("../getSizeOnDisk.js")
+const { hasAccess } = require("./Auth/Middlewares")
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)
@@ -16,6 +18,20 @@ app.listen(port, () => {
 })
 
 app.post("/login", Login);
+app.get("/getUploadsSizeOnDisk", hasAccess, getUploadsSizeOnDiskRoute);
+app.get("/logout", hasAccess, logoutRoute);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //this route is used to validate the token, it is called when a page logs in, it checks if the token is valid

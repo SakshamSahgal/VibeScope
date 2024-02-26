@@ -43,4 +43,14 @@ function Login(req, res) {
     })
 }
 
-module.exports = { Login }
+function logoutRoute(req, res) {
+    console.log("Recieved request to logout")
+    console.log(req.cookies)
+    res.clearCookie('token').json({
+        success: true,
+        message: "Logout Successful"
+    })
+}
+
+
+module.exports = { Login, logoutRoute }
