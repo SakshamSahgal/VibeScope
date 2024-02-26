@@ -13,8 +13,8 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'build')));
-app.use(express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname,"..", 'build')));
+app.use(express.static(path.join(__dirname,"..", 'uploads')));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 module.exports = { app };
